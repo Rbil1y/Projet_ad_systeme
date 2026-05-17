@@ -110,3 +110,26 @@ Le répertoire `/var/log/backups` centralise les journaux d'exécution. Le fichi
 **Procédure de restauration.** En cas de perte de données, la restauration s'effectue en identifiant d'abord l'archive la plus récente avec `ls -t /backups/backup_*.tar.gz | head -1`, en vérifiant son contenu avec `tar -tzf`, puis en l'extrayant dans un répertoire temporaire avant de copier les fichiers vers `/data`. Les permissions sont ensuite réajustées avec `sudo chown -R jose:jose /data` pour garantir l'accès à l'utilisateur.
 
 ---
+## Résultats et analyse
+
+Après la mise en place complète du système sur la machine virtuelle (IP `192.168.1.212`, utilisateur `jose`), le projet a produit les résultats suivants.
+
+L'environnement de travail a été correctement initialisé : les répertoires `/data`, `/backups` et `/var/log/backups` ont été créés avec les permissions adaptées à l'utilisateur `jose`. Les 9 fichiers de test représentant environ 440 Ko de données ont été générés avec succès dans les quatre sous-répertoires de `/data`.
+
+Le script `backup.sh` a été développé, déposé dans `/usr/local/bin/` et rendu exécutable. Son premier lancement manuel a confirmé le bon enchaînement de toutes les étapes : vérifications préliminaires validées, archive créée et nommée correctement avec horodatage, intégrité vérifiée par `tar -tzf`, log produit avec les niveaux `[INFO]` et `[OK]`, et rotation exécutée sans erreur.
+
+La tâche cron a été configurée dans le crontab de root et son fonctionnement a été validé par un test à court terme. Une deuxième archive est apparue dans `/backups/` après l'exécution automatique, confirmant que le planificateur opère correctement.
+
+La simulation de rotation a été réalisée en créant 10 archives fictives datées de 1 à 10 jours en arrière. Après exécution du script, seules les archives de moins de 7 jours ont été conservées, les trois plus anciennes ayant été supprimées automatiquement. Cette suppression a été tracée dans le fichier `backup.log`.
+
+Le test de restauration a été concluant : après suppression intentionnelle du contenu de `/data`, les 9 fichiers ont été intégralement récupérés depuis la sauvegarde la plus récente. La vérification du contenu du fichier `rapport.txt` a confirmé que les données étaient intactes.
+
+**Analyse du fonctionnement.**
+
+Points positifs : le script est modulaire et facilement configurable grâce à ses variables centralisées. La journalisation horodatée permet un suivi précis des opérations. L'intégration du `PATH` explicite résout de manière pérenne le problème le plus fréquent des scripts lancés par cron. La rotation par `find -mtime` est fiable et ne nécessite aucune maintenance manuelle.
+
+Limites observées : le système de sauvegarde est local, ce qui signifie qu'une panne du disque dur hébergeant `/backups` entraînerait une perte simultanée des données sources et des sauvegardes. Par ailleurs, le script ne gère pas les sauvegardes incrémentielles, ce qui implique la copie complète de `/data` à chaque exécution, même si les données n'ont pas changé. Enfin, l'absence d'alerte par courriel ou par notification en cas d'échec rend le système silencieux lors d'un incident.
+
+Améliorations possibles : ajouter un mécanisme d'envoi d'alerte par courriel en cas d'erreur (`mail` ou `sendmail`). Implémenter des sauvegardes incrémentielles avec `rsync` pour optimiser le temps d'exécution et l'espace utilisé. Envisager une copie des archives vers un support externe ou un serveur distant pour assurer la redondance. Améliorer la sécurité des archives en appliquant un chiffrement avec `gpg` avant le stockage.
+
+---
