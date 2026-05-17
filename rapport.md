@@ -133,3 +133,30 @@ Limites observées : le système de sauvegarde est local, ce qui signifie qu'une
 Améliorations possibles : ajouter un mécanisme d'envoi d'alerte par courriel en cas d'erreur (`mail` ou `sendmail`). Implémenter des sauvegardes incrémentielles avec `rsync` pour optimiser le temps d'exécution et l'espace utilisé. Envisager une copie des archives vers un support externe ou un serveur distant pour assurer la redondance. Améliorer la sécurité des archives en appliquant un chiffrement avec `gpg` avant le stockage.
 
 ---
+## Perspectives d'évolution du projet
+
+Dans une perspective d'amélioration, ce projet de sauvegardes automatisées peut évoluer vers une solution encore plus robuste et adaptée aux exigences d'un environnement de production réel.
+
+**Mise en place de sauvegardes distantes.** La copie des archives sur un serveur distant via `rsync` ou `scp` permettrait d'assurer la redondance géographique des données et d'éliminer le risque de perte totale en cas de défaillance du disque local. Une connexion SSH sans mot de passe avec clé publique rendrait cette opération automatisable sans intervention humaine.
+
+**Sauvegardes incrémentielles avec rsync.** Plutôt que de copier l'intégralité de `/data` à chaque exécution, l'utilisation de `rsync --link-dest` permettrait de ne transférer que les fichiers modifiés depuis la dernière sauvegarde. Cette approche réduit significativement le temps d'exécution et l'espace disque consommé, tout en conservant un historique complet grâce aux liens matériels.
+
+**Alertes et notifications automatiques.** Intégrer un mécanisme d'alerte par courriel (`mailutils`, `sendmail`) pour notifier l'administrateur en cas d'échec de sauvegarde. Cela permettrait de détecter immédiatement un problème sans avoir à consulter manuellement les logs, ce qui est essentiel dans un contexte de production.
+
+**Chiffrement des archives.** Appliquer un chiffrement symétrique ou asymétrique des archives avec `gpg` avant leur stockage ou leur transfert. Cela garantirait la confidentialité des données sauvegardées, notamment en cas de vol ou d'accès non autorisé au serveur de stockage.
+
+**Interface de supervision.** Développer un tableau de bord simple accessible via un navigateur ou un script de rapport automatique permettant de visualiser l'état des sauvegardes, l'historique des exécutions et les éventuelles erreurs détectées dans les logs.
+
+---
+
+## Conclusion
+
+Ce projet de sauvegardes automatisées locales, réalisé sur un serveur Ubuntu Server 22.04 LTS virtualisé sous VirtualBox, a permis de mettre en pratique les concepts fondamentaux de l'administration système Linux et de la protection des données.
+
+À travers la conception et le déploiement d'un système complet articulé autour d'un script bash, d'un planificateur cron et d'un mécanisme de rotation, nous avons démontré comment automatiser de manière fiable et autonome la protection d'un ensemble de données critiques. Chaque composante du système remplit un rôle précis : le script orchestre les opérations et gère les erreurs, cron garantit l'exécution régulière sans intervention humaine, et la rotation maintient un historique raisonnable sans saturer le disque.
+
+Le projet a également mis en lumière plusieurs problèmes courants liés à l'administration Linux en ligne de commande, notamment la gestion des permissions avec sudo, le comportement de la variable `$USER` dans un contexte d'élévation de privilèges, et l'importance du `PATH` explicite dans les scripts exécutés par cron. Ces difficultés, anticipées et documentées tout au long du projet, font partie intégrante des compétences d'un administrateur système.
+
+Le test de restauration, étape souvent négligée dans les stratégies de sauvegarde, a confirmé que le système ne se contente pas de créer des archives mais permet effectivement de récupérer les données dans leur état d'origine. C'est cette capacité de restauration qui donne tout son sens à la sauvegarde.
+
+En conclusion, ce projet démontre que des outils standards et accessibles — bash, tar, cron — suffisent pour construire une solution de sauvegarde solide et professionnelle, à condition d'être combinés avec méthode, rigueur et une bonne gestion des cas d'erreur.
