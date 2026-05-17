@@ -1,3 +1,68 @@
+# Projet 2 — Sauvegardes Automatisées Locales
+
+**Automatisation des sauvegardes système avec bash, tar et cron sur Ubuntu Server**
+
+**Par :** Ruth Jose JERÔME, Billy Rolph EXUME, Brian ANTOINE
+
+**Sous la direction de :** Mr Ismaël SAINT AMOUR
+
+**Jacmel, 2026**
+
+---
+
+## Table des matières
+
+1. [Liste des abréviations](#liste-des-abréviations)
+2. [Introduction](#introduction)
+3. [Objectifs du projet](#objectifs-du-projet)
+   - [Objectif général](#objectif-général)
+   - [Objectifs spécifiques](#objectifs-spécifiques)
+4. [Problématique](#problématique)
+5. [Méthodologie](#méthodologie)
+6. [Outils et technologies utilisés](#outils-et-technologies-utilisés)
+7. [Description du projet](#description-du-projet)
+8. [Résultats et analyse](#résultats-et-analyse)
+9. [Perspectives d'évolution du projet](#perspectives-dévolution-du-projet)
+10. [Conclusion](#conclusion)
+
+---
+
+## Liste des abréviations
+
+**bash** : Bourne Again SHell
+
+**CLI** : Command Line Interface (Interface en ligne de commande)
+
+**cron** : Command Run ON (démon planificateur de tâches Unix)
+
+**EOF** : End Of File (fin de fichier, délimiteur heredoc)
+
+**GNU** : GNU's Not Unix
+
+**gzip** : GNU zip (algorithme de compression)
+
+**IP** : Internet Protocol
+
+**LAN** : Local Area Network (réseau local)
+
+**OS** : Operating System (système d'exploitation)
+
+**PATH** : Variable d'environnement définissant les répertoires de commandes système
+
+**PID** : Process Identifier (identifiant de processus)
+
+**SSH** : Secure Shell (protocole de connexion distante sécurisée)
+
+**tar** : Tape ARchive (outil d'archivage Unix)
+
+**UTC** : Universal Time Coordinated (temps universel coordonné)
+
+**VM** : Virtual Machine (machine virtuelle)
+
+**VirtualBox** : Logiciel de virtualisation développé par Oracle
+
+---
+
 ## Introduction
 
 Avec l'augmentation constante du volume de données générées dans les systèmes informatiques, la perte accidentelle de données représente l'un des risques les plus critiques pour toute infrastructure. Qu'il s'agisse d'une erreur humaine, d'une panne matérielle ou d'une corruption logicielle, l'absence d'une stratégie de sauvegarde fiable peut avoir des conséquences graves et parfois irréversibles.
@@ -133,6 +198,7 @@ Limites observées : le système de sauvegarde est local, ce qui signifie qu'une
 Améliorations possibles : ajouter un mécanisme d'envoi d'alerte par courriel en cas d'erreur (`mail` ou `sendmail`). Implémenter des sauvegardes incrémentielles avec `rsync` pour optimiser le temps d'exécution et l'espace utilisé. Envisager une copie des archives vers un support externe ou un serveur distant pour assurer la redondance. Améliorer la sécurité des archives en appliquant un chiffrement avec `gpg` avant le stockage.
 
 ---
+
 ## Perspectives d'évolution du projet
 
 Dans une perspective d'amélioration, ce projet de sauvegardes automatisées peut évoluer vers une solution encore plus robuste et adaptée aux exigences d'un environnement de production réel.
